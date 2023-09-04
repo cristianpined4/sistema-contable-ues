@@ -1,0 +1,11 @@
+{
+  "prettierConfig":{
+    "tabWidth":"4",
+    "singleQuote":"true",
+    "printWidth":"100",
+    "trailingComma":"'all'",
+    "arrowParens":"'always'",
+    "endOfLine":"'auto'"
+  },
+  "importOrder": ["^import com.example", "^import (?!static)", "^import static"]
+}

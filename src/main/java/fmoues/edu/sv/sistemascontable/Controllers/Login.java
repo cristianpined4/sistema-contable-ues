@@ -2,9 +2,7 @@ package fmoues.edu.sv.sistemascontable.Controllers;
 
 import fmoues.edu.sv.sistemascontable.Services.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/login")
@@ -12,9 +10,9 @@ public class Login {
    @Autowired
     private AuthService auth;
 
-   @GetMapping("/")
-    public boolean login(String username,String password){
-       return auth.getUser(username) != null ? auth.getUser(username).isEstado_usuario():false;
+   @PostMapping("/")
+    public boolean login(@RequestBody String username, @RequestBody String password){
+       return auth.getAuth(username,password) != null ? auth.getAuth(username,password).isEstado_usuario():false;
    }
 
 }

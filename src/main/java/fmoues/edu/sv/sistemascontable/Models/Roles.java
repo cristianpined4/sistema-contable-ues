@@ -4,11 +4,11 @@ import jakarta.persistence.*;
 
 @Entity(name = "roles")
 @Table(name = "\"roles\"", schema = "public")
-@Inheritance(strategy = InheritanceType.JOINED)
 public class Roles {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_rol", length = 10)
-    private String id_rol;
+    private int id_rol;
 
     @Column(name = "nombre_rol", nullable = false)
     private String nombre_rol;
@@ -16,11 +16,11 @@ public class Roles {
     @Column(name = "descripcion_rol", nullable = false)
     private String descripcion_rol;
 
-    public String getId_rol() {
+    public int getId_rol() {
         return id_rol;
     }
 
-    public void setId_rol(String id_rol) {
+    public void setId_rol(int id_rol) {
         this.id_rol = id_rol;
     }
 

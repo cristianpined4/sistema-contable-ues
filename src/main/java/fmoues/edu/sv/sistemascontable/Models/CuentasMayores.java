@@ -2,13 +2,15 @@ package fmoues.edu.sv.sistemascontable.Models;
 
 import jakarta.persistence.*;
 
-import java.io.Serializable;
-
 @Entity(name = "cuentasmayores")
 @Table(name = "\"cuentasmayores\"", schema = "public")
-@PrimaryKeyJoinColumn(name = "id_cuentasMayores", foreignKey = @ForeignKey(name = "fk_rubro"))
-@Inheritance(strategy = InheritanceType.JOINED)
-public class CuentasMayores extends Rubros implements Serializable {
+public class CuentasMayores {
+
+    @Id
+    @Column(name = "id_cuentasMayores", nullable = false)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id_cuentasMayores;
+
     @Column(name = "codigo_cuentas_mayores", nullable = false)
     private String codigo_cuentas_mayores;
 
@@ -17,6 +19,17 @@ public class CuentasMayores extends Rubros implements Serializable {
 
     @Column(name = "descripcion_cuentas_mayores", nullable = false)
     private String descripcion_cuentas_mayores;
+
+    @Column(name = "fk_rubro", nullable = false)
+    private int fk_rubro;
+
+    public int getId_cuentasMayores() {
+        return id_cuentasMayores;
+    }
+
+    public void setId_cuentasMayores(int id_cuentasMayores) {
+        this.id_cuentasMayores = id_cuentasMayores;
+    }
 
     public String getCodigo_cuentas_mayores() {
         return codigo_cuentas_mayores;
@@ -40,5 +53,13 @@ public class CuentasMayores extends Rubros implements Serializable {
 
     public void setDescripcion_cuentas_mayores(String descripcion_cuentas_mayores) {
         this.descripcion_cuentas_mayores = descripcion_cuentas_mayores;
+    }
+
+    public int getFk_rubro() {
+        return fk_rubro;
+    }
+
+    public void setFk_rubro(int fk_rubro) {
+        this.fk_rubro = fk_rubro;
     }
 }

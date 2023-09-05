@@ -1,16 +1,17 @@
 package fmoues.edu.sv.sistemascontable.Models;
 
 import jakarta.persistence.*;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
 
-import java.io.Serializable;
+import java.sql.Date;
 
 @Entity(name = "usuarios")
 @Table(name = "\"usuarios\"", schema = "public")
-@OnDelete(action = OnDeleteAction.CASCADE)
-@PrimaryKeyJoinColumn(name = "id_usuario", foreignKey = @ForeignKey(name = "fk_rol"))
-public class Usuarios extends Roles implements Serializable {
+public class Usuarios {
+
+    @Id
+    @Column(name = "id_usuario", nullable = false)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id_usuario;
     @Column(name = "nombre_usuario", nullable = false)
     private String nombre_usuario;
 
@@ -26,11 +27,22 @@ public class Usuarios extends Roles implements Serializable {
     @Column(name = "correo_usuario", nullable = false, unique = true)
     private String correo_usuario;
 
-    @Column(name = "fecha_registro_usuario", nullable = false)
-    private String fecha_registro;
+    @Column(name = "fecha_registro_usuario", nullable = false, columnDefinition = "DATE DEFAULT CURRENT_DATE")
+    private Date fecha_registro;
 
-    @Column(name = "estado_usuario", nullable = false)
+    @Column(name = "estado_usuario", nullable = false, columnDefinition = "BOOLEAN DEFAULT TRUE")
     private boolean estado_usuario;
+
+    @Column(name = "fk_rol", nullable = false)
+    private int fk_rol;
+
+    public int getId_usuario() {
+        return id_usuario;
+    }
+
+    public void setId_usuario(int id_usuario) {
+        this.id_usuario = id_usuario;
+    }
 
     public String getNombre_usuario() {
         return nombre_usuario;
@@ -72,11 +84,11 @@ public class Usuarios extends Roles implements Serializable {
         this.correo_usuario = correo_usuario;
     }
 
-    public String getFecha_registro() {
+    public Date getFecha_registro() {
         return fecha_registro;
     }
 
-    public void setFecha_registro(String fecha_registro) {
+    public void setFecha_registro(Date fecha_registro) {
         this.fecha_registro = fecha_registro;
     }
 
@@ -86,5 +98,13 @@ public class Usuarios extends Roles implements Serializable {
 
     public void setEstado_usuario(boolean estado_usuario) {
         this.estado_usuario = estado_usuario;
+    }
+
+    public int getFk_rol() {
+        return fk_rol;
+    }
+
+    public void setFk_rol(int fk_rol) {
+        this.fk_rol = fk_rol;
     }
 }

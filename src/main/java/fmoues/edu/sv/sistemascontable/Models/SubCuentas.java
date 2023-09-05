@@ -2,12 +2,14 @@ package fmoues.edu.sv.sistemascontable.Models;
 
 import jakarta.persistence.*;
 
-import java.io.Serializable;
-
 @Entity(name = "subcuentas")
 @Table(name = "\"subcuentas\"", schema = "public")
-@PrimaryKeyJoinColumn(name = "id_subcuentas", foreignKey = @ForeignKey(name = "fk_cuentas"))
-public class SubCuentas extends Cuentas implements Serializable {
+public class SubCuentas {
+
+    @Id
+    @Column(name = "id_subcuentas", nullable = false)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id_subcuentas;
     @Column(name = "codigo_subcuentas", nullable = false)
     private String codigo_subcuentas;
 
@@ -16,6 +18,17 @@ public class SubCuentas extends Cuentas implements Serializable {
 
     @Column(name = "descripcion_subcuentas", nullable = false)
     private String descripcion_subcuentas;
+
+    @Column(name = "fk_cuentas", nullable = false)
+    private int fk_cuentas;
+
+    public int getId_subcuentas() {
+        return id_subcuentas;
+    }
+
+    public void setId_subcuentas(int id_subcuentas) {
+        this.id_subcuentas = id_subcuentas;
+    }
 
     public String getCodigo_subcuentas() {
         return codigo_subcuentas;
@@ -39,5 +52,13 @@ public class SubCuentas extends Cuentas implements Serializable {
 
     public void setDescripcion_subcuentas(String descripcion_subcuentas) {
         this.descripcion_subcuentas = descripcion_subcuentas;
+    }
+
+    public int getFk_cuentas() {
+        return fk_cuentas;
+    }
+
+    public void setFk_cuentas(int fk_cuentas) {
+        this.fk_cuentas = fk_cuentas;
     }
 }

@@ -6,8 +6,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface UsuariosRepository extends JpaRepository<Usuarios,Integer> {
+public interface UsuariosRepository extends JpaRepository<Usuarios, Integer> {
 
-    @Query(value = "select * from usuarios where nombre_usuario = ?1 limit 1",nativeQuery = true)
+    @Query(value = "select * from usuarios where usuario_usuario = ?1 limit 1", nativeQuery = true)
     Usuarios findUserByUsername(String username);
 }

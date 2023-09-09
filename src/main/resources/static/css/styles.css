@@ -1,0 +1,319 @@
+html,
+body {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  background-image: url("../img/fondo.jpg");
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-attachment: fixed; /* Para asegurar que el fondo se muestre correctamente */
+  background-repeat: no-repeat; /* Esto evita que la imagen se repita */
+  transition: all 500ms ease-in-out;
+}
+
+/* Cambia la imagen de fondo al hacer hover */
+body:hover {
+  background-image: url("../img/fondo2.webp");
+}
+
+.container:has(#app) {
+  text-align: center;
+  margin-top: 42%;
+}
+
+h1 {
+  font-size: 36px;
+  color: #333;
+}
+
+p {
+  font-size: 18px;
+  color: #666;
+  margin-bottom: 20px;
+}
+
+/* Estilos para los enlaces dentro de la tarjeta */
+.options a {
+  text-decoration: none;
+  padding: 10px 20px;
+  margin: 10px;
+  background-color: #007bff;
+  color: #fff;
+  border-radius: 5px;
+  display: block;
+}
+
+/* Cambiar el color al pasar el cursor sobre los enlaces */
+.options a:hover {
+  background-color: #df4e50;
+  color: aliceblue;
+}
+
+/* Estilos para el contenedor principal */
+.centered-card {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+/* Estilos para la tarjeta */
+.card {
+  border: 1px solid #fff8f8;
+  border-radius: 5px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  text-align: center;
+  background: linear-gradient(to bottom, #ffffff, #99d7ec);
+  width: 500px;
+  height: 400px;
+}
+
+.card-body {
+  padding: 0;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+input {
+  margin-bottom: 20px;
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  font-size: 16px;
+  width: 100%;
+}
+
+input:focus {
+  outline: none;
+}
+
+button {
+  padding: 10px 20px;
+  border-radius: 5px;
+  border: none;
+  background-color: #007bff;
+  color: #fff;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+body:has(#app) {
+  background-image: none;
+  overflow-y: hidden;
+  overflow-x: hidden;
+}
+
+/* Estilos para el contenedor principal */
+#app .container {
+  display: flex;
+  flex-wrap: wrap;
+  max-width: 100%;
+  padding: 0 !important;
+  height: 100vh;
+}
+
+/* Estilos para la barra lateral */
+#app .sidebar {
+  background-color: #333;
+  color: #fff;
+  width: 250px;
+  padding: 20px;
+}
+
+#app .sidebar h2 {
+  margin-top: 0;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #fff;
+}
+
+#app .sidebar ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+#app .sidebar ul li {
+  padding: 0.5rem 1rem;
+  background-color: #555;
+  margin-bottom: 10px;
+}
+
+#app .sidebar ul li a {
+  color: #fff;
+  text-decoration: none;
+  display: block;
+  width: inherit;
+  height: inherit;
+}
+
+#app .card {
+  width: auto;
+  height: auto;
+  background: #fff;
+}
+
+/* Estilos para el contenido principal */
+#app .main-content {
+  flex: 1;
+  padding: 0rem;
+}
+
+#app .card.content {
+  overflow-y: auto;
+  height: 100vh;
+}
+
+#app .main-content h1 {
+  margin-top: 0;
+}
+
+#app .main-content p {
+  color: #555;
+}
+
+#app .sidebar nav ul li:has(a.active),
+.sidebar nav ul li:hover {
+  background-color: #242424;
+  cursor: pointer;
+}
+
+/* Estilos para pantallas pequeñas */
+@media (max-width: 768px) {
+  #app .main-content {
+    padding: 0;
+  }
+
+  #app .sidebar {
+    width: 100%;
+    position: absolute;
+    z-index: 10000;
+  }
+}
+
+#libro header {
+  background-color: #1e385e;
+  color: #fff;
+  text-align: center;
+  padding: 20px 0;
+}
+
+#libro h1 {
+  margin: 0;
+  color: #fff;
+}
+
+#libro main {
+  display: flex;
+  justify-content: space-around;
+  align-items: flex-start;
+  padding: 20px;
+}
+
+#libro .table-container {
+  flex: 1;
+  margin-right: 20px;
+  overflow: auto;
+  max-height: 400px;
+}
+
+#libro table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+#libro table th,
+#libro table td {
+  border: 1px solid #ccc;
+  padding: 10px;
+  text-align: center;
+}
+
+#libro form {
+  border: 1px solid #ccc;
+  padding: 20px;
+  border-radius: 5px;
+}
+
+#libro input[type="date"],
+#libro input[type="text"],
+#libro input[type="number"],
+#libro button,
+#libro a#exit {
+  display: block;
+  margin-bottom: 10px;
+  width: 100%;
+  padding: 10px;
+}
+
+#libro .selectize-control.single {
+  width: 100%;
+  text-align: left;
+  max-width: 220px;
+}
+
+#libro button,
+#libro a#exit {
+  background-color: #1e385e;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+#libro button:hover,
+#libro a#exit:hover {
+  background-color: #227432;
+}
+
+/* Estilos para los botones */
+#libro .buttons {
+  text-align: center;
+  margin-top: 20px;
+}
+
+/* Estilos para los botones de acciones */
+#libro .buttons button,
+#libro .buttons a {
+  margin: 5px;
+}
+
+/* Estilo para el botón de salida */
+#libro a#exit {
+  background-color: #ff2f60;
+}
+
+@media screen and (max-width: 768px) {
+  #libro main {
+    flex-direction: column;
+  }
+
+  #libro .table-container,
+  #libro .form-container {
+    margin-right: 0;
+    margin-bottom: 2rem;
+    width: 100%;
+  }
+
+  #libro .selectize-control.single {
+    max-width: 100%;
+  }
+}
+
+@media screen and (min-width: 768px) {
+  .w-md-25 {
+    width: 25% !important;
+  }
+}

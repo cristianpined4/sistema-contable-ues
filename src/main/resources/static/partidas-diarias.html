@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Inicio - SISTEMA DE CONTABILIDAD</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet" />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.3.1/mdb.min.css" rel="stylesheet" />
+  <link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.6/css/selectize.bootstrap3.min.css" />
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+
+<body>
+  <div id="app">
+    <!-- Contenedor principal -->
+    <div class="container">
+      <!-- Barra lateral -->
+      <div class="sidebar d-none d-md-block">
+        <div class="w-100 d-md-none d-flex justify-content-end">
+          <button class="menu btn btn-danger btn-sm rounded-5">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+        <h4 class="text-center my-3">Panel de Administración</h4>
+        <div class="d-flex justify-content-between text-center align-items-center flex-column">
+          <img src="https://www.w3schools.com/w3css/img_avatar2.png" class="img-fluid rounded-circle w-25">
+          <h5 class="my-3" data-username>Nombre de usuario</h5>
+          <a class="btn btn-danger mb-4" data-logout>Cerrar Sesión</a>
+        </div>
+        <nav>
+          <ul>
+            <li><a href="/dashboard.html">Inicio</a></li>
+            <li><a href="/partidas-diarias.html" class="active">Partidas diarias</a></li>
+          </ul>
+        </nav>
+      </div>
+      <!-- Contenido principal -->
+      <div class="main-content">
+        <div class="navbar navbar-expand-lg navbar-dark bg-dark d-block d-md-none">
+          <button class="navbar-toggler menu">
+            <i class="fas fa-bars"></i>
+          </button>
+        </div>
+        <div class="card content">
+          <div class="card-body" id="libro">
+            <header>
+              <h1>Partidas Diarias</h1>
+            </header>
+            <main>
+              <div class="table-container">
+                <div class="buttons d-flex justify-content-end my-1 mb-2">
+                  <button class="w-50 w-md-25" data-mdb-toggle="modal" data-mdb-target="#newPartida"><i
+                      class="fas fa-plus"></i> Agregar partida</button>
+                </div>
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Fecha</th>
+                      <th>Partida</th>
+                      <th>Concepto</th>
+                      <th>Opciones</th>
+                    </tr>
+                  </thead>
+                  <tbody id="tbody-partidas">
+                    <!-- se insertarán las filas de datos -->
+                  </tbody>
+                </table>
+              </div>
+            </main>
+          </div>
+        </div>
+
+        <!-- Modal para agregar partida -->
+        <form id="form-partidas">
+          <div class="modal fade" id="newPartida" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="exampleModalLabel">Nueva Partida</h5>
+                  <button type="button" class="btn-close" data-mdb-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                  <div class="input-group mb-3">
+                    <span class="input-group-text"><i class="fas fa-book-open"></i></span>
+                    <input type="text" class="form-control" placeholder="Descripción" name="descripcion_partida"
+                      required>
+                  </div>
+                  <div class="input-group mb-3">
+                    <span class="input-group-text"><i class="fas fa-calendar"></i></span>
+                    <input type="date" class="form-control" id="fecha" placeholder="Fecha" name="fecha_partida"
+                      required>
+                  </div>
+                </div>
+                <div class="modal-footer">
+                  <button type="submit" class="btn btn-primary">Crear</button>
+                  <button type="button" class="btn btn-secondary" data-mdb-dismiss="modal"
+                    id="btn-reset">Cancelar</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.3.1/mdb.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.6/js/standalone/selectize.min.js"></script>
+    <script src="./js/App.js" type="module"></script>
+</body>
+
+</html>

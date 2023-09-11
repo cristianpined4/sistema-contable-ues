@@ -251,7 +251,8 @@ body:has(#app) {
 #libro input[type="text"],
 #libro input[type="number"],
 #libro button,
-#libro a#exit {
+#libro a#exit,
+#libro select {
   display: block;
   margin-bottom: 10px;
   width: 100%;

@@ -54,7 +54,7 @@
                   <thead>
                     <tr>
                       <th>Fecha</th>
-                      <th>Cuenta</th>
+                      <th>subcuenta</th>
                       <th>Descripción</th>
                       <th>Debe</th>
                       <th>Haber</th>
@@ -67,20 +67,22 @@
               </div>
               <div class="form-container">
                 <form id="entry-form">
-                  <input type="date" id="fecha" placeholder="Fecha" required>
-                  <select name="Cuenta" id="cuenta" required placeholder="Cuenta">
+                  <input type="date" id="fecha" placeholder="Fecha" required name="fecha">
+                  <select name="subcuenta" id="cuenta" required placeholder="Cuenta">
                     <option value=""></option>
                   </select>
                   <input type="text" id="descripcion" placeholder="Descripción" required>
-                  <input type="number" id="debe" placeholder="Debe" required>
-                  <input type="number" id="haber" placeholder="Haber" required>
+                  <select name="tipo" id="tipo" placeholder="Tipo" name="tipo" required>
+                    <option value="DEBE">Debe</option>
+                    <option value="HABER">Haber</option>
+                  </select>
+                  <input type="number" id="monto" placeholder="Monto" required name="monto" step="0.01">
                   <button type="submit">Agregar Apunte</button>
                 </form>
                 <div class="buttons">
-                  <button id="edit-entry">Modificar Apunte</button>
-                  <button id="update-entry">Actualizar Apunte</button>
+                  <button id="edit-entry">Limpiar</button>
                   <button id="delete-entry">Borrar Apunte</button>
-                  <button id="delete-all">Borrar Asiento</button>
+                  <button id="delete-all">Borrar Asientos</button>
                   <a id="exit" href="/partidas-diarias.html">Salir</a>
                 </div>
               </div>

@@ -1,6 +1,7 @@
 import {
   deletePartida,
   getAllPartidas,
+  loaderDetallePartida,
   nuevaPartida,
   resetform,
 } from "../events/Partidas.js";
@@ -24,6 +25,11 @@ const Partidas = [
   {
     action: "click",
     event: deletePartida,
+    element: document,
+  },
+  {
+    action: "DOMContentLoaded",
+    event: loaderDetallePartida,
     element: document,
   },
 ];

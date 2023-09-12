@@ -59,7 +59,7 @@ public class PartidasController {
         return Map.of("success", nueva != null, "data", gson.toJson(nueva));
     }
 
-    @PostMapping("/{id}/detalle/{id}/edit")
+    @PutMapping("/{id}/detalle/{id}/edit")
     public Object updatePartida(@RequestBody String ob){
         return Map.of("success",true);
     }

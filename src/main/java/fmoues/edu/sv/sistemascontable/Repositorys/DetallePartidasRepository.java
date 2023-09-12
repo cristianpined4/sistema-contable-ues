@@ -12,4 +12,7 @@ public interface DetallePartidasRepository extends JpaRepository<DetallePartidas
 
     @Query(value = "select *  from detalle_partidas where fk_partida = ?1", nativeQuery = true)
     List<DetallePartidas> getAllBySubcuenta(Integer id);
+
+    @Query(value = "delete from detalle_partidas where fk_partida = ?1",nativeQuery = true)
+    boolean removerAllDetalle(Integer id);
 }

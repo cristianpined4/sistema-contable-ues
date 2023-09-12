@@ -38,6 +38,26 @@ public class PartidasService {
         return repoDetalle.save(ob);
     }
 
+    public DetallePartidas updateDetalle(DetallePartidas ob, Integer id){
+        DetallePartidas edit = repoDetalle.getReferenceById(id);
+        edit.setFecha(ob.getFecha());
+        edit.setDescripcion(ob.getDescripcion());
+        edit.setTipo(ob.getTipo());
+        edit.setMonto(ob.getMonto());
+        repoDetalle.save(edit);
+        return edit;
+    }
+
+    public Boolean removerDetalleOne(Integer id) {
+        repoDetalle.deleteById(id);
+        return !repoDetalle.existsById(id);
+    }
+
+    public Boolean removerDetalleAll(Integer ids) {
+        repoDetalle.removerAllDetalle(ids);
+        return !repo.existsById(ids);
+    }
+
     public List<DetallePartidas> getAllDetalle(Integer id) {
         return repoDetalle.getAllBySubcuenta(id);
     }

@@ -1,102 +1,148 @@
 <!DOCTYPE html>
 <html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Inicio - SISTEMA DE CONTABILIDAD</title>
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.3.1/mdb.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.6/css/selectize.bootstrap3.min.css"
+    />
+    <link rel="stylesheet" href="css/styles.css" />
+  </head>
 
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Inicio - SISTEMA DE CONTABILIDAD</title>
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet" />
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.3.1/mdb.min.css" rel="stylesheet" />
-  <link rel="stylesheet"
-    href="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.6/css/selectize.bootstrap3.min.css" />
-  <link rel="stylesheet" href="css/styles.css">
-</head>
-
-<body>
-  <div id="app">
-    <!-- Contenedor principal -->
-    <div class="container">
-      <!-- Barra lateral -->
-      <div class="sidebar d-none d-md-block">
-        <div class="w-100 d-md-none d-flex justify-content-end">
-          <button class="menu btn btn-danger btn-sm rounded-5">
-            <i class="fas fa-times"></i>
-          </button>
+  <body>
+    <div id="app">
+      <!-- Contenedor principal -->
+      <div class="container">
+        <!-- Barra lateral -->
+        <div class="sidebar d-none d-md-block">
+          <div class="w-100 d-md-none d-flex justify-content-end">
+            <button class="menu btn btn-danger btn-sm rounded-5">
+              <i class="fas fa-times"></i>
+            </button>
+          </div>
+          <h4 class="text-center my-3">Panel de Administración</h4>
+          <div
+            class="d-flex justify-content-between text-center align-items-center flex-column"
+          >
+            <img
+              src="https://www.w3schools.com/w3css/img_avatar2.png"
+              class="img-fluid rounded-circle w-25"
+            />
+            <h5 class="my-3" data-username>Nombre de usuario</h5>
+            <a class="btn btn-danger mb-4" data-logout>Cerrar Sesión</a>
+          </div>
+          <nav>
+            <ul>
+              <li><a href="/dashboard.html">Inicio</a></li>
+              <li>
+                <a href="/partidas-diarias.html" class="active"
+                  >Partidas diarias</a
+                >
+              </li>
+            </ul>
+          </nav>
         </div>
-        <h4 class="text-center my-3">Panel de Administración</h4>
-        <div class="d-flex justify-content-between text-center align-items-center flex-column">
-          <img src="https://www.w3schools.com/w3css/img_avatar2.png" class="img-fluid rounded-circle w-25">
-          <h5 class="my-3" data-username>Nombre de usuario</h5>
-          <a class="btn btn-danger mb-4" data-logout>Cerrar Sesión</a>
-        </div>
-        <nav>
-          <ul>
-            <li><a href="/dashboard.html">Inicio</a></li>
-            <li><a href="/partidas-diarias.html" class="active">Partidas diarias</a></li>
-          </ul>
-        </nav>
-      </div>
-      <!-- Contenido principal -->
-      <div class="main-content">
-        <div class="navbar navbar-expand-lg navbar-dark bg-dark d-block d-md-none">
-          <button class="navbar-toggler menu">
-            <i class="fas fa-bars"></i>
-          </button>
-        </div>
-        <div class="card content">
-          <div class="card-body" id="libro">
-            <header>
-              <h1>Libro Diario de Contabilidad</h1>
-            </header>
-            <main>
-              <div class="table-container">
-                <table>
-                  <thead>
-                    <tr>
-                      <th>Fecha</th>
-                      <th>subcuenta</th>
-                      <th>Descripción</th>
-                      <th>Debe</th>
-                      <th>Haber</th>
-                    </tr>
-                  </thead>
-                  <tbody id="table-body">
-                    <!-- se insertarán las filas de datos -->
-                  </tbody>
-                </table>
-              </div>
-              <div class="form-container">
-                <form id="entry-form">
-                  <input type="date" id="fecha" placeholder="Fecha" required name="fecha">
-                  <select name="subcuenta" id="cuenta" required placeholder="Cuenta">
-                    <option value=""></option>
-                  </select>
-                  <input type="text" id="descripcion" placeholder="Descripción" required>
-                  <select name="tipo" id="tipo" placeholder="Tipo" name="tipo" required>
-                    <option value="DEBE">Debe</option>
-                    <option value="HABER">Haber</option>
-                  </select>
-                  <input type="number" id="monto" placeholder="Monto" required name="monto" step="0.01">
-                  <button type="submit">Agregar Apunte</button>
-                </form>
-                <div class="buttons">
-                  <button id="edit-entry">Limpiar</button>
-                  <button id="delete-entry">Borrar Apunte</button>
-                  <button id="delete-all">Borrar Asientos</button>
-                  <a id="exit" href="/partidas-diarias.html">Salir</a>
+        <!-- Contenido principal -->
+        <div class="main-content">
+          <div
+            class="navbar navbar-expand-lg navbar-dark bg-dark d-block d-md-none"
+          >
+            <button class="navbar-toggler menu">
+              <i class="fas fa-bars"></i>
+            </button>
+          </div>
+          <div class="card content">
+            <div class="card-body" id="libro">
+              <header>
+                <h1>Libro Diario de Contabilidad</h1>
+              </header>
+              <main>
+                <div class="table-container">
+                  <table>
+                    <thead>
+                      <tr>
+                        <th>Fecha</th>
+                        <th>Descripción</th>
+                        <th>Cuenta</th>
+                        <th>Debe</th>
+                        <th>Haber</th>
+                      </tr>
+                    </thead>
+                    <tbody id="table-body">
+                      <!-- se insertarán las filas de datos -->
+                    </tbody>
+                  </table>
                 </div>
-              </div>
-            </main>
+                <div class="form-container">
+                  <form id="entry-form">
+                    <input
+                      type="date"
+                      id="fecha"
+                      placeholder="Fecha"
+                      required
+                      name="fecha"
+                    />
+                    <select
+                      name="subcuenta"
+                      id="cuenta"
+                      required
+                      placeholder="Cuenta"
+                    >
+                      <option value=""></option>
+                    </select>
+                    <input
+                      type="text"
+                      id="descripcion"
+                      placeholder="Descripción"
+                      required
+                    />
+                    <select
+                      name="tipo"
+                      id="tipo"
+                      placeholder="Tipo"
+                      name="tipo"
+                      required
+                    >
+                      <option value="DEBE">Debe</option>
+                      <option value="HABER">Haber</option>
+                    </select>
+                    <input
+                      type="number"
+                      id="monto"
+                      placeholder="Monto"
+                      required
+                      name="monto"
+                      step="0.01"
+                    />
+                    <button type="submit">Agregar Apunte</button>
+                  </form>
+                  <div class="buttons">
+                    <button id="edit-entry">Limpiar</button>
+                    <button id="delete-entry">Borrar Apunte</button>
+                    <button id="delete-all">Borrar Asientos</button>
+                    <a id="exit" href="/partidas-diarias.html">Salir</a>
+                  </div>
+                </div>
+              </main>
+            </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
-  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.3.1/mdb.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.6/js/standalone/selectize.min.js"></script>
-  <script src="./js/App.js" type="module"></script>
-</body>
-
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.3.1/mdb.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.6/js/standalone/selectize.min.js"></script>
+    <script src="./js/App.js" type="module"></script>
+  </body>
 </html>

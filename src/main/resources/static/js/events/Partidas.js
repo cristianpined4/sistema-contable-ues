@@ -138,25 +138,78 @@ export const loaderDetallePartida = (url, e) => {
   // Función para cargar datos en la tabla
   function loadTableData(data) {
     tableBody.innerHTML = "";
-    data.forEach((entry, index) => {
-      const newRow = document.createElement("tr");
-      newRow.id = entry.id_detalle_partida;
-      let subcuenta = subcuentas.find(
-        (el) => el.id_subcuentas === entry.fk_subcuentas
-      );
-      newRow.innerHTML = `
-                <td>${entry.fecha}</td>
+    let haberes = 0,
+      debes = 0;
+    data
+      .sort((a, b) =>
+        b.descripcion.toLowerCase().localeCompare(a.descripcion.toLowerCase())
+      )
+      .forEach((entry, index) => {
+        const newRow = document.createElement("tr");
+        newRow.id = entry.id_detalle_partida;
+        let subcuenta = subcuentas.find(
+          (el) => el.id_subcuentas === entry.fk_subcuentas
+        );
+        newRow.innerHTML = `
+                <td data-fecha><span>${entry.fecha}</span></td>
+                <td data-description><span>${entry.descripcion}</span></td>
                 <td data-el="${entry.fk_subcuentas}">
+                  ${
+                    entry.tipo !== "DEBE"
+                      ? "&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;"
+                      : ""
+                  }
                   ${subcuenta.codigo_subcuentas} - 
                   ${subcuenta.nombre_subcuentas}
                 </td>
-                <td>${entry.descripcion}</td>
                 <td>${entry.tipo === "DEBE" ? entry.monto.toFixed(2) : ""}</td>
                 <td>${entry.tipo !== "DEBE" ? entry.monto.toFixed(2) : ""}</td>
             `;
-      newRow.addEventListener("click", () => selectRow(index));
-      tableBody.appendChild(newRow);
-    });
+        newRow.addEventListener("click", () => selectRow(index));
+        tableBody.appendChild(newRow);
+        if (entry.tipo === "DEBE") {
+          debes += parseFloat(entry.monto);
+        } else {
+          haberes += parseFloat(entry.monto);
+        }
+      });
+
+    let totales = document.createElement("tr");
+    totales.innerHTML = `
+    <td colspan="3"><strong>Total<strong></td>
+    <td><strong>${debes.toFixed(2)}<strong></td>
+    <td><strong>${haberes.toFixed(2)}<strong></td>
+    `;
+    tableBody.appendChild(totales);
+
+    let tds = tableBody.querySelectorAll("tr");
+    for (let i = 0; i < tds.length; i++) {
+      if (tds[i + 1]) {
+        let el1 = tds[i],
+          el2 = tds[i + 1];
+        if (el2.querySelector("td[data-description] span") !== null) {
+          if (
+            el1.querySelector("td[data-fecha] span").innerHTML.toLowerCase() ==
+              el2
+                .querySelector("td[data-fecha] span")
+                .innerHTML.toLowerCase() &&
+            el1
+              .querySelector("td[data-description] span")
+              .innerHTML.toLowerCase() ==
+              el2
+                .querySelector("td[data-description] span")
+                .innerHTML.toLowerCase()
+          ) {
+            if (el2.querySelector("td[data-fecha] span")) {
+              el2.querySelector("td[data-fecha] span").style.visibility =
+                "hidden";
+              el2.querySelector("td[data-description] span").style.visibility =
+                "hidden";
+            }
+          }
+        }
+      }
+    }
   }
 
   // Datos iniciales
@@ -184,81 +237,119 @@ export const loaderDetallePartida = (url, e) => {
   getAll();
 
   // Evento para agregar nuevo apunte
-  entryForm.addEventListener("submit", function (e) {
-    e.preventDefault();
-    const fecha = fechaInput.value;
-    const subcuenta = subcuentaInput.value;
-    const descripcion = descripcionInput.value;
-    const tipo = tipoInput.value;
-    const monto = parseFloat(montoInput.value) || 0;
+  if (entryForm) {
+    entryForm.addEventListener("submit", function (e) {
+      e.preventDefault();
+      const fecha = fechaInput.value;
+      const subcuenta = subcuentaInput.value;
+      const descripcion = descripcionInput.value;
+      const tipo = tipoInput.value;
+      const monto = parseFloat(montoInput.value) || 0;
 
-    if (selectedRowIndex === -1) {
-      // Agregar nuevo apunte
-      fetch(`${url}/partidas/${id_partida}/detalles/new`, {
-        method: "POST",
-        body: JSON.stringify({
-          fk_partida: id_partida,
+      if (selectedRowIndex === -1) {
+        // Agregar nuevo apunte
+        fetch(`${url}/partidas/${id_partida}/detalles/new`, {
+          method: "POST",
+          body: JSON.stringify({
+            fk_partida: id_partida,
+            fecha,
+            fk_subcuentas: subcuenta,
+            descripcion,
+            tipo,
+            monto,
+          }),
+          headers: {
+            "Content-Type": "application/json",
+          },
+        })
+          .then((res) => res.json())
+          .then((res) => {
+            if (res.success) {
+              const newRow = document.createElement("tr");
+              const data = JSON.parse(res.data);
+              initialData.push(data);
+              loadTableData(initialData);
+              entryForm.reset(); // Limpiar el formulario
+              $("#cuenta").data("selectize").setValue("");
+              fechaInput.value = new Date().toISOString().split("T")[0];
+              Alert("Success", "Apunte agregado exitosamente", "success");
+            }
+          })
+          .catch((err) => {
+            console.log(err);
+            Alert("Error", "No se pudo agregar el apunte", "error");
+          });
+      } else {
+        // Actualizar apunte existente
+        const updatedRow = tableBody.children[selectedRowIndex];
+        const [fechaCell, descripcionCell, subcuentaCell, debeCell, haberCell] =
+          updatedRow.children;
+        fechaCell.textContent = fecha;
+        subcuentaCell.textContent = subcuentaInput.querySelector(
+          `option[value="${subcuenta}"]`
+        ).innerHTML;
+        subcuentaCell.dataset.el = subcuenta;
+        descripcionCell.textContent = descripcion;
+        debeCell.textContent = tipo === "DEBE" ? monto.toFixed(2) : "";
+        haberCell.textContent = tipo !== "DEBE" ? monto.toFixed(2) : "";
+        initialData[selectedRowIndex] = {
           fecha,
           fk_subcuentas: subcuenta,
           descripcion,
           tipo,
           monto,
-        }),
-        headers: {
-          "Content-Type": "application/json",
-        },
-      })
-        .then((res) => res.json())
-        .then((res) => {
-          if (res.success) {
-            const newRow = document.createElement("tr");
-            const data = JSON.parse(res.data);
-            initialData.push(data);
-            loadTableData(initialData);
-            entryForm.reset(); // Limpiar el formulario
-            $("#cuenta").data("selectize").setValue("");
-            fechaInput.value = new Date().toISOString().split("T")[0];
-            Alert("Success", "Apunte agregado exitosamente", "success");
-          }
-        })
-        .catch((err) => {
-          console.log(err);
-          Alert("Error", "No se pudo agregar el apunte", "error");
-        });
-    } else {
-      // Actualizar apunte existente
-      const updatedRow = tableBody.children[selectedRowIndex];
-      const [fechaCell, subcuentaCell, descripcionCell, debeCell, haberCell] =
-        updatedRow.children;
-      fechaCell.textContent = fecha;
-      subcuentaCell.textContent = subcuentaInput.querySelector(
-        `option[value="${subcuenta}"]`
-      ).innerHTML;
-      subcuentaCell.dataset.el = subcuenta;
-      descripcionCell.textContent = descripcion;
-      debeCell.textContent = tipo === "DEBE" ? monto.toFixed(2) : "";
-      haberCell.textContent = tipo !== "DEBE" ? monto.toFixed(2) : "";
-      initialData[selectedRowIndex] = {
-        fecha,
-        fk_subcuentas: subcuenta,
-        descripcion,
-        tipo,
-        monto,
-      };
+        };
+        selectedRowIndex = -1; // Resetear el índice seleccionado
+        entryForm.reset(); // Limpiar el formulario
+        $("#cuenta").data("selectize").setValue("");
+        fechaInput.value = new Date().toISOString().split("T")[0];
+        entryForm.querySelector("button[type=submit]").textContent =
+          "Agregar Apunte";
+      }
+    });
+
+    // Evento para reset form
+    editEntryButton.addEventListener("click", function () {
+      if (selectedRowIndex !== -1) {
+        // Habilitar la edición del apunte seleccionado
+        entryForm.reset(); // Limpiar el formulario
+        $("#cuenta").data("selectize").setValue("");
+        fechaInput.value = new Date().toISOString().split("T")[0];
+        selectedRowIndex = -1; // Resetear el índice seleccionado
+        entryForm.querySelector("button[type=submit]").textContent =
+          "Agregar Apunte";
+      }
+    });
+
+    // Evento para borrar apunte
+    deleteEntryButton.addEventListener("click", function () {
+      if (selectedRowIndex !== -1) {
+        // Eliminar el apunte seleccionado
+        tableBody.removeChild(tableBody.children[selectedRowIndex]);
+        initialData.splice(selectedRowIndex, 1);
+        selectedRowIndex = -1; // Resetear el índice seleccionado
+        entryForm.reset(); // Limpiar el formulario
+        $("#cuenta").data("selectize").setValue("");
+        fechaInput.value = new Date().toISOString().split("T")[0];
+      }
+    });
+
+    // Evento para borrar asiento completo
+    deleteAllButton.addEventListener("click", function () {
+      tableBody.innerHTML = ""; // Borrar todas las filas
+      initialData.length = 0; // Limpiar los datos
       selectedRowIndex = -1; // Resetear el índice seleccionado
       entryForm.reset(); // Limpiar el formulario
       $("#cuenta").data("selectize").setValue("");
       fechaInput.value = new Date().toISOString().split("T")[0];
-      entryForm.querySelector("button[type=submit]").textContent =
-        "Agregar Apunte";
-    }
-  });
+    });
+  }
 
   // Función para seleccionar una fila en la tabla
   function selectRow(index) {
     selectedRowIndex = index;
     const selectedRow = tableBody.children[index];
-    const [fecha, subcuenta, descripcion, debe, haber] = selectedRow.children;
+    const [fecha, descripcion, subcuenta, debe, haber] = selectedRow.children;
     fechaInput.value = fecha.textContent;
     subcuentaInput.value = subcuenta.dataset.el;
     $("#cuenta").data("selectize").setValue(subcuenta.dataset.el);
@@ -269,38 +360,4 @@ export const loaderDetallePartida = (url, e) => {
     entryForm.querySelector("button[type=submit]").textContent =
       "Actualizar Apunte";
   }
-
-  // Evento para editar apunte
-  editEntryButton.addEventListener("click", function () {
-    if (selectedRowIndex !== -1) {
-      // Habilitar la edición del apunte seleccionado
-      entryForm.reset(); // Limpiar el formulario
-      $("#cuenta").data("selectize").setValue("");
-      fechaInput.value = new Date().toISOString().split("T")[0];
-      selectedRowIndex = -1; // Resetear el índice seleccionado
-    }
-  });
-
-  // Evento para borrar apunte
-  deleteEntryButton.addEventListener("click", function () {
-    if (selectedRowIndex !== -1) {
-      // Eliminar el apunte seleccionado
-      tableBody.removeChild(tableBody.children[selectedRowIndex]);
-      initialData.splice(selectedRowIndex, 1);
-      selectedRowIndex = -1; // Resetear el índice seleccionado
-      entryForm.reset(); // Limpiar el formulario
-      $("#cuenta").data("selectize").setValue("");
-      fechaInput.value = new Date().toISOString().split("T")[0];
-    }
-  });
-
-  // Evento para borrar asiento completo
-  deleteAllButton.addEventListener("click", function () {
-    tableBody.innerHTML = ""; // Borrar todas las filas
-    initialData.length = 0; // Limpiar los datos
-    selectedRowIndex = -1; // Resetear el índice seleccionado
-    entryForm.reset(); // Limpiar el formulario
-    $("#cuenta").data("selectize").setValue("");
-    fechaInput.value = new Date().toISOString().split("T")[0];
-  });
 };

@@ -59,8 +59,8 @@ public class PartidasController {
         return Map.of("success", nueva != null, "data", gson.toJson(nueva));
     }
 
-    @PutMapping("/{id}/detalle/{id}/edit")
-    public Object updatePartida(@RequestBody String ob){
-        return Map.of("success",true);
+    @PutMapping("/{id}/detalle/{id2}/edit")
+    public Object updatePartida(@RequestBody String ob) {
+        return Map.of("success", true);
     }
 }

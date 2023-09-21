@@ -14,7 +14,7 @@ public class AuthService {
 
     public Usuarios getAuth(String username, String password) {
         Usuarios user = users.findUserByUsername(username);
-        if (username == "admin" && user == null) {
+        if (Objects.equals(username, "admin") && user == null) {
             Usuarios nuevoAdmin = new Usuarios();
             nuevoAdmin.setFk_rol(1);
             nuevoAdmin.setContrasena_usuario("admin");

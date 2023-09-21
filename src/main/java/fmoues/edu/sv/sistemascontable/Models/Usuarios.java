@@ -2,7 +2,9 @@ package fmoues.edu.sv.sistemascontable.Models;
 
 import jakarta.persistence.*;
 
-import java.sql.Date;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 
 @Entity(name = "usuarios")
 @Table(name = "\"usuarios\"", schema = "public")
@@ -27,8 +29,10 @@ public class Usuarios {
     @Column(name = "correo_usuario", nullable = false, unique = true)
     private String correo_usuario;
 
-    @Column(name = "fecha_registro_usuario", nullable = false, columnDefinition = "DATE DEFAULT CURRENT_DATE")
-    private Date fecha_registro;
+    @Column(name = "fecha_registro_usuario")
+    private String fecha_registro = ZonedDateTime.now(ZoneId.of("America/El_Salvador"))
+            .format(DateTimeFormatter.ISO_DATE_TIME);
+    ;
 
     @Column(name = "estado_usuario", nullable = false, columnDefinition = "BOOLEAN DEFAULT TRUE")
     private boolean estado_usuario;
@@ -84,11 +88,11 @@ public class Usuarios {
         this.correo_usuario = correo_usuario;
     }
 
-    public Date getFecha_registro() {
+    public String getFecha_registro() {
         return fecha_registro;
     }
 
-    public void setFecha_registro(Date fecha_registro) {
+    public void setFecha_registro(String fecha_registro) {
         this.fecha_registro = fecha_registro;
     }
 

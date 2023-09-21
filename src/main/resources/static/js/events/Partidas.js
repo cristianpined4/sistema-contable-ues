@@ -234,7 +234,9 @@ export const loaderDetallePartida = (url, e) => {
       });
   };
 
+  if(tableBody){
   getAll();
+  }
 
   // Evento para agregar nuevo apunte
   if (entryForm) {

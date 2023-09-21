@@ -34,8 +34,9 @@ const Login = (url, e) => {
         Alert("Error", "Email o Contraseña Invalidos!", "error");
       }
     })
-    .catch((error) => {
-      Alert("Error", error, "error");
+    .catch(async (error) => {
+      console.error(await error);
+      Alert("Error", error.message, "error");
     });
 };
 

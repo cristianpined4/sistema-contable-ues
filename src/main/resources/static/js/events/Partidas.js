@@ -11,7 +11,7 @@ export const getAllPartidas = (urlServer, e) => {
   e.preventDefault();
   const url = `${urlServer}/partidas/`;
   fetch(url)
-    .then((res) => res.json())
+  .then(res => res.ok ? res.json(): Promise.reject(res))
     .then((res) => {
       if (res.success) {
         let data = JSON.parse(res.data);
@@ -52,7 +52,7 @@ export const nuevaPartida = (urlServer, e) => {
       "Content-Type": "application/json",
     },
   })
-    .then((res) => res.json())
+  .then(res => res.ok ? res.json(): Promise.reject(res))
     .then((res) => {
       if (res.success) {
         form.reset();
@@ -85,7 +85,7 @@ export const deletePartida = (urlServer, e) => {
           method: "DELETE",
           body: id,
         })
-          .then((res) => res.json())
+          .then(res => res.ok ? res.json(): Promise.reject(res))
           .then((res) => {
             if (res.success) {
               Alert(
@@ -217,7 +217,7 @@ export const loaderDetallePartida = (url, e) => {
 
   const getAll = () => {
     fetch(`${url}/partidas/${id_partida}/detalles`)
-      .then((res) => res.json())
+      .then(res => res.ok ? res.json(): Promise.reject(res))
       .then((res) => {
         if (res.success) {
           const data = JSON.parse(res.data);
@@ -264,7 +264,7 @@ export const loaderDetallePartida = (url, e) => {
             "Content-Type": "application/json",
           },
         })
-          .then((res) => res.json())
+          .then(res => res.ok ? res.json(): Promise.reject(res))
           .then((res) => {
             if (res.success) {
               const newRow = document.createElement("tr");
@@ -294,19 +294,39 @@ export const loaderDetallePartida = (url, e) => {
         descripcionCell.textContent = descripcion;
         debeCell.textContent = tipo === "DEBE" ? monto.toFixed(2) : "";
         haberCell.textContent = tipo !== "DEBE" ? monto.toFixed(2) : "";
-        initialData[selectedRowIndex] = {
-          fecha,
-          fk_subcuentas: subcuenta,
-          descripcion,
-          tipo,
-          monto,
-        };
-        selectedRowIndex = -1; // Resetear el índice seleccionado
-        entryForm.reset(); // Limpiar el formulario
-        $("#cuenta").data("selectize").setValue("");
-        fechaInput.value = new Date().toISOString().split("T")[0];
-        entryForm.querySelector("button[type=submit]").textContent =
-          "Agregar Apunte";
+
+        fetch(`${url}/partidas/${id_partida}/detalle/${initialData[selectedRowIndex].id_detalle_partida}/edit`, {
+          method: "PUT",
+          body: JSON.stringify({
+            fk_partida: id_partida,
+            fecha,
+            fk_subcuentas: subcuenta,
+            descripcion,
+            tipo,
+            monto,
+          }),
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }).then(res => res.ok ? res.json(): Promise.reject(res))
+        .then((res) => {
+          console.log(res);
+          if (res.success) {
+            initialData[selectedRowIndex] = JSON.parse(res.data);
+            loadTableData(initialData);
+            selectedRowIndex = -1; // Resetear el índice seleccionado
+            entryForm.reset(); // Limpiar el formulario
+            $("#cuenta").data("selectize").setValue("");
+            fechaInput.value = new Date().toISOString().split("T")[0];
+            entryForm.querySelector("button[type=submit]").textContent =
+              "Agregar Apunte";
+            Alert("Success", "Apunte editado exitosamente", "success");
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+          Alert("Error", "No se pudo editar el apunte", "error");
+        });
       }
     });
 

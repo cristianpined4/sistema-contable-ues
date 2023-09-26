@@ -44,7 +44,7 @@ public class PartidasController {
     @GetMapping("/{id}")
     public Object getPartida(@PathVariable Integer id) {
         Partidas el = pa.getPartida(id);
-        return Map.of("success", true, "data", gson.toJson(el));
+        return Map.of("success", el !=null, "data", gson.toJson(el));
     }
 
     @GetMapping("/{id}/detalles")
@@ -60,7 +60,15 @@ public class PartidasController {
     }
 
     @PutMapping("/{id}/detalle/{id2}/edit")
-    public Object updatePartida(@RequestBody String ob) {
-        return Map.of("success", true);
+    public Object updateDetalle(@PathVariable Integer id,@PathVariable Integer id2,@RequestBody String ob) {
+        DetallePartidas edit = gson.fromJson(ob, DetallePartidas.class);
+        edit = pa.updateDetalle(edit,id2);
+        return Map.of("success", edit != null ,"data",gson.toJson(edit));
+    }
+
+    @DeleteMapping("/{id}/detalle/{id2}/delete")
+    public Object deleteDetalle(@PathVariable Integer id,@PathVariable Integer id2) {
+        boolean res = pa.removerDetalleOne(id2);
+        return Map.of("success", res, "data", id);
     }
 }

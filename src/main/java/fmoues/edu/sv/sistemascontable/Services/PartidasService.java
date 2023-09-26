@@ -7,6 +7,7 @@ import fmoues.edu.sv.sistemascontable.Repositorys.PartidasRepositorys;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.sql.SQLException;
 import java.util.List;
 
 @Service
@@ -26,8 +27,15 @@ public class PartidasService {
     }
 
     public Boolean removerOne(int id) {
-        repo.deleteById(id);
-        return !repo.existsById(id);
+        boolean res = false;
+        try{
+            repo.deleteById(id);
+            repoDetalle.removerAllDetalle(id);
+            res = true;
+        }catch (Exception error){
+            res = false;
+        }
+        return !repo.existsById(id) && !res;
     }
 
     public Partidas getPartida(Integer id) {
@@ -41,11 +49,11 @@ public class PartidasService {
     public DetallePartidas updateDetalle(DetallePartidas ob, Integer id){
         DetallePartidas edit = repoDetalle.getReferenceById(id);
         edit.setFecha(ob.getFecha());
+        edit.setFk_subcuentas(ob.getFk_subcuentas());
         edit.setDescripcion(ob.getDescripcion());
         edit.setTipo(ob.getTipo());
         edit.setMonto(ob.getMonto());
-        repoDetalle.save(edit);
-        return edit;
+        return  repoDetalle.save(edit);
     }
 
     public Boolean removerDetalleOne(Integer id) {
@@ -54,8 +62,14 @@ public class PartidasService {
     }
 
     public Boolean removerDetalleAll(Integer ids) {
-        repoDetalle.removerAllDetalle(ids);
-        return !repo.existsById(ids);
+        boolean res = false;
+        try{
+            repoDetalle.removerAllDetalle(ids);
+            res = true;
+        }catch (Exception error){
+            res = false;
+        }
+        return res;
     }
 
     public List<DetallePartidas> getAllDetalle(Integer id) {

@@ -67,8 +67,14 @@ public class PartidasController {
     }
 
     @DeleteMapping("/{id}/detalle/{id2}/delete")
-    public Object deleteDetalle(@PathVariable Integer id,@PathVariable Integer id2) {
+    public Object deleteDetalleOne(@PathVariable Integer id,@PathVariable Integer id2) {
         boolean res = pa.removerDetalleOne(id2);
+        return Map.of("success", res, "data", id2);
+    }
+
+    @DeleteMapping("/{id}/detalle/delete-all")
+    public Object deleteDetalleAll(@RequestBody String id) {
+        boolean res = pa.removerDetalleAll(Integer.parseInt(id));
         return Map.of("success", res, "data", id);
     }
 }

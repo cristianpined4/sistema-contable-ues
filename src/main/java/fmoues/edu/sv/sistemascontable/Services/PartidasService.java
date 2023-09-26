@@ -65,9 +65,8 @@ public class PartidasService {
         boolean res = false;
         try{
             repoDetalle.removerAllDetalle(ids);
+        }catch (Throwable error){
             res = true;
-        }catch (Exception error){
-            res = false;
         }
         return res;
     }

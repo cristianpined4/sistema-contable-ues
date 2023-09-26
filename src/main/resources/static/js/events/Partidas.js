@@ -226,6 +226,9 @@ export const loaderDetallePartida = (url, e) => {
             initialData.push(entry);
           });
           loadTableData(initialData);
+        }else {
+          console.log(err);
+          Alert("Error", "No se pudo cargar los apuntes", "error");
         }
       })
       .catch((err) => {
@@ -275,6 +278,9 @@ export const loaderDetallePartida = (url, e) => {
               $("#cuenta").data("selectize").setValue("");
               fechaInput.value = new Date().toISOString().split("T")[0];
               Alert("Success", "Apunte agregado exitosamente", "success");
+            }else {
+              console.log(err);
+              Alert("Error", "No se pudo agregar el apunte", "error");
             }
           })
           .catch((err) => {
@@ -321,6 +327,9 @@ export const loaderDetallePartida = (url, e) => {
             entryForm.querySelector("button[type=submit]").textContent =
               "Agregar Apunte";
             Alert("Success", "Apunte editado exitosamente", "success");
+          }else {
+            console.log(err);
+            Alert("Error", "No se pudo editar el apunte", "error");
           }
         })
         .catch((err) => {
@@ -358,12 +367,38 @@ export const loaderDetallePartida = (url, e) => {
 
     // Evento para borrar asiento completo
     deleteAllButton.addEventListener("click", function () {
-      tableBody.innerHTML = ""; // Borrar todas las filas
-      initialData.length = 0; // Limpiar los datos
-      selectedRowIndex = -1; // Resetear el índice seleccionado
-      entryForm.reset(); // Limpiar el formulario
-      $("#cuenta").data("selectize").setValue("");
-      fechaInput.value = new Date().toISOString().split("T")[0];
+      Alert.confirm(
+        `¿Desea eliminar todos los asientos de la  partida #${id_partida} de forma permanente?`,
+        { si: "Eliminar", no: "Cancelar" },
+        () => {
+            fetch(`${url}/partidas/${id_partida}/detalle/delete-all`,{
+                method: "DELETE",
+                body:id_partida,
+                headers: {
+                  "Content-Type": "application/json",
+                },
+              }
+            )
+            .then(res => res.ok ? res.json() : Promise.reject(res))
+            .then(data => {
+              if(data.success){
+                tableBody.innerHTML = ""; // Borrar todas las filas
+                initialData.length = 0; // Limpiar los datos
+                selectedRowIndex = -1; // Resetear el índice seleccionado
+                entryForm.reset(); // Limpiar el formulario
+                $("#cuenta").data("selectize").setValue("");
+                fechaInput.value = new Date().toISOString().split("T")[0];
+                Alert('Success', 'Asientos eliminados correctamente.', 'success');
+              }else {
+                console.log(err);
+                Alert("Error", "No se pudo borrar todos los apuntes", "error");
+              }
+            })
+            .catch((err) => {
+              console.log(err);
+              Alert("Error", "No se pudo borrar todos los apuntes", "error");
+            });
+          });
     });
   }
 

@@ -245,6 +245,10 @@ body:has(#app) {
   text-align: left;
 }
 
+#libro table td:nth-child(4),#libro table td:nth-child(5){
+  text-align: right !important;
+}
+
 #libro form {
   border: 1px solid #ccc;
   padding: 20px;

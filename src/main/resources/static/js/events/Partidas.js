@@ -165,7 +165,6 @@ export const loaderDetallePartida = (url, e) => {
                 <td>${entry.tipo === "DEBE" ? entry.monto.toFixed(2) : ""}</td>
                 <td>${entry.tipo !== "DEBE" ? entry.monto.toFixed(2) : ""}</td>
             `;
-        newRow.addEventListener("click", () => selectRow(index));
         tableBody.appendChild(newRow);
         if (entry.tipo === "DEBE") {
           debes += parseFloat(entry.monto);
@@ -176,17 +175,20 @@ export const loaderDetallePartida = (url, e) => {
 
     let totales = document.createElement("tr");
     totales.innerHTML = `
-    <td colspan="3"><strong>Total<strong></td>
-    <td><strong>${debes.toFixed(2)}<strong></td>
-    <td><strong>${haberes.toFixed(2)}<strong></td>
+    <td colspan="3"><strong>Total General<strong></td>
+    <td class="debe"><strong>${debes.toFixed(2)}<strong></td>
+    <td class="haber"><strong>${haberes.toFixed(2)}<strong></td>
     `;
     tableBody.appendChild(totales);
 
     let tds = tableBody.querySelectorAll("tr");
+    let haberItem = 0,debeItem = 0;
     for (let i = 0; i < tds.length; i++) {
+      debeItem +=  tds[i].querySelector("td:nth-child(4)") && tds[i].querySelector("td:nth-child(4)").textContent !== "" ? parseFloat(tds[i].querySelector("td:nth-child(4)").textContent) : 0;
+      haberItem += tds[i].querySelector("td:nth-child(5)") && tds[i].querySelector("td:nth-child(5)").textContent !== "" ? parseFloat(tds[i].querySelector("td:nth-child(5)").textContent) : 0;
       if (tds[i + 1]) {
         let el1 = tds[i],
-          el2 = tds[i + 1];
+        el2 = tds[i + 1];
         if (el2.querySelector("td[data-description] span") !== null) {
           if (
             el1.querySelector("td[data-fecha] span").innerHTML.toLowerCase() ==
@@ -205,15 +207,32 @@ export const loaderDetallePartida = (url, e) => {
                 "hidden";
               el2.querySelector("td[data-description] span").style.visibility =
                 "hidden";
-            }
+              }
+          }else {
+            let totales = document.createElement("tr");
+            totales.innerHTML = `
+            <td colspan="3"><strong>Total<strong></td>
+            <td class="debe"><strong>${debeItem.toFixed(2)}<strong></td>
+            <td class="haber"><strong>${haberItem.toFixed(2)}<strong></td>
+            `;
+            tds[i].insertAdjacentElement("afterend",totales);
+            debeItem = haberItem = 0;
           }
         }
       }
     }
+    if(tds.length > 1){
+      totales = document.createElement("tr");
+      totales.innerHTML = `
+      <td colspan="3"><strong>Total<strong></td>
+      <td class="debe"><strong>${debeItem.toFixed(2)}<strong></td>
+      <td class="haber"><strong>${haberItem.toFixed(2)}<strong></td>
+      `;
+      tds[(tds.length-1)].insertAdjacentElement("beforebegin",totales);
+      debeItem = haberItem = 0;
+      Array.from(tableBody.children).forEach((newRow,index) => newRow.addEventListener("click", () => selectRow(index)));
+    }
   }
-
-  // Datos iniciales
-  const initialData = [];
 
   const getAll = () => {
     fetch(`${url}/partidas/${id_partida}/detalles`)
@@ -222,10 +241,7 @@ export const loaderDetallePartida = (url, e) => {
         if (res.success) {
           const data = JSON.parse(res.data);
           subcuentas = JSON.parse(res.cuentas);
-          data.forEach((entry) => {
-            initialData.push(entry);
-          });
-          loadTableData(initialData);
+          loadTableData(data);
         }else {
           console.log(err);
           Alert("Error", "No se pudo cargar los apuntes", "error");
@@ -270,10 +286,7 @@ export const loaderDetallePartida = (url, e) => {
           .then(res => res.ok ? res.json(): Promise.reject(res))
           .then((res) => {
             if (res.success) {
-              const newRow = document.createElement("tr");
-              const data = JSON.parse(res.data);
-              initialData.push(data);
-              loadTableData(initialData);
+              getAll();
               entryForm.reset(); // Limpiar el formulario
               $("#cuenta").data("selectize").setValue("");
               fechaInput.value = new Date().toISOString().split("T")[0];
@@ -301,7 +314,7 @@ export const loaderDetallePartida = (url, e) => {
         debeCell.textContent = tipo === "DEBE" ? monto.toFixed(2) : "";
         haberCell.textContent = tipo !== "DEBE" ? monto.toFixed(2) : "";
 
-        fetch(`${url}/partidas/${id_partida}/detalle/${initialData[selectedRowIndex].id_detalle_partida}/edit`, {
+        fetch(`${url}/partidas/${id_partida}/detalle/${tableBody.children[selectedRowIndex].id}/edit`, {
           method: "PUT",
           body: JSON.stringify({
             fk_partida: id_partida,
@@ -318,8 +331,7 @@ export const loaderDetallePartida = (url, e) => {
         .then((res) => {
           console.log(res);
           if (res.success) {
-            initialData[selectedRowIndex] = JSON.parse(res.data);
-            loadTableData(initialData);
+            getAll();
             selectedRowIndex = -1; // Resetear el índice seleccionado
             entryForm.reset(); // Limpiar el formulario
             $("#cuenta").data("selectize").setValue("");
@@ -355,13 +367,38 @@ export const loaderDetallePartida = (url, e) => {
     // Evento para borrar apunte
     deleteEntryButton.addEventListener("click", function () {
       if (selectedRowIndex !== -1) {
-        // Eliminar el apunte seleccionado
-        tableBody.removeChild(tableBody.children[selectedRowIndex]);
-        initialData.splice(selectedRowIndex, 1);
-        selectedRowIndex = -1; // Resetear el índice seleccionado
-        entryForm.reset(); // Limpiar el formulario
-        $("#cuenta").data("selectize").setValue("");
-        fechaInput.value = new Date().toISOString().split("T")[0];
+        Alert.confirm(
+          `¿Desea eliminar este asiento de la  partida #${id_partida} de forma permanente?`,
+          { si: "Eliminar", no: "Cancelar" },
+          () => {
+              fetch(`${url}/partidas/${id_partida}/detalle/${tableBody.children[selectedRowIndex].id}/delete`,{
+                  method: "DELETE",
+                  body:id_partida,
+                  headers: {
+                    "Content-Type": "application/json",
+                  },
+                }
+              )
+              .then(res => res.ok ? res.json() : Promise.reject(res))
+              .then(data => {
+                if(data.success){
+                  // Eliminar el apunte seleccionado
+                  getAll()
+                  selectedRowIndex = -1; // Resetear el índice seleccionado
+                  entryForm.reset(); // Limpiar el formulario
+                  $("#cuenta").data("selectize").setValue("");
+                  fechaInput.value = new Date().toISOString().split("T")[0];
+                  Alert('Success', 'Asiento eliminados correctamente.', 'success');
+                }else {
+                  console.log(err);
+                  Alert("Error", "No se pudo borrar este apunte", "error");
+                }
+              })
+              .catch((err) => {
+                console.log(err);
+                Alert("Error", "No se pudo borrar todos los apuntes", "error");
+              });
+            });
       }
     });
 
@@ -382,8 +419,7 @@ export const loaderDetallePartida = (url, e) => {
             .then(res => res.ok ? res.json() : Promise.reject(res))
             .then(data => {
               if(data.success){
-                tableBody.innerHTML = ""; // Borrar todas las filas
-                initialData.length = 0; // Limpiar los datos
+                getAll()
                 selectedRowIndex = -1; // Resetear el índice seleccionado
                 entryForm.reset(); // Limpiar el formulario
                 $("#cuenta").data("selectize").setValue("");
@@ -406,6 +442,7 @@ export const loaderDetallePartida = (url, e) => {
   function selectRow(index) {
     selectedRowIndex = index;
     const selectedRow = tableBody.children[index];
+    if(!selectedRow.id) return; 
     const [fecha, descripcion, subcuenta, debe, haber] = selectedRow.children;
     fechaInput.value = fecha.textContent;
     subcuentaInput.value = subcuenta.dataset.el;

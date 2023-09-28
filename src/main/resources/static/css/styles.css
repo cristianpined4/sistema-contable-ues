@@ -226,7 +226,7 @@ body:has(#app) {
   flex: 1;
   margin-right: 20px;
   overflow: auto;
-  max-height: 400px;
+  max-height: 80vh;
 }
 
 #libro table {
@@ -241,11 +241,11 @@ body:has(#app) {
   text-align: center;
 }
 
-#libro table td:nth-child(3){
-  text-align: left;
+#libro.diarias table td[data-el]{
+  text-align: left !important;
 }
 
-#libro table td:nth-child(4),#libro table td:nth-child(5){
+#libro.diarias table td:nth-child(4),#libro table td:nth-child(5),.debe,.haber{
   text-align: right !important;
 }
 

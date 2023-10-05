@@ -6,6 +6,7 @@ import fmoues.edu.sv.sistemascontable.Services.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.NoSuchAlgorithmException;
 import java.util.Map;
 
 @RestController
@@ -19,7 +20,7 @@ public class LoginController {
 
 
     @PostMapping("/auth")
-    public Object login(@RequestBody String user) {
+    public Object login(@RequestBody String user) throws NoSuchAlgorithmException {
         boolean res = false;
         Usuarios ob = gson.fromJson(user, Usuarios.class);
         ob = auth.getAuth(ob.getUsuario_usuario(), ob.getContrasena_usuario());

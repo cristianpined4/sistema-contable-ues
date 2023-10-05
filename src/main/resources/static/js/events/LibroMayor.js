@@ -18,7 +18,7 @@ const render = (data) => {
     return arr.reduce((resultado, item) => {
       if (!titulos.has(item[0])) {
         titulos.add(item[0]);
-        resultado.push(item[0]);
+        resultado.push(`${item[3]} - ${item[0]}`);
       }
       return resultado;
     }, []);
@@ -44,7 +44,7 @@ const render = (data) => {
     let haber = [],
       debe = [];
     data.forEach((item2) => {
-      if (item === item2[0]) {
+      if (item === `${item2[3]} - ${item2[0]}`) {
         if (item2[1] === "HABER") {
           haber.push(item2[2]);
         } else {

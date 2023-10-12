@@ -182,7 +182,7 @@ export const loaderDetallePartida = (url, e) => {
     tableBody.appendChild(totales);
 
     let tds = tableBody.querySelectorAll("tr");
-    let haberItem = 0,debeItem = 0;
+    let haberItem = 0,debeItem = 0,isAlertado=false;
     for (let i = 0; i < tds.length; i++) {
       debeItem +=  tds[i].querySelector("td:nth-child(4)") && tds[i].querySelector("td:nth-child(4)").textContent !== "" ? parseFloat(tds[i].querySelector("td:nth-child(4)").textContent) : 0;
       haberItem += tds[i].querySelector("td:nth-child(5)") && tds[i].querySelector("td:nth-child(5)").textContent !== "" ? parseFloat(tds[i].querySelector("td:nth-child(5)").textContent) : 0;
@@ -216,6 +216,21 @@ export const loaderDetallePartida = (url, e) => {
             <td class="haber"><strong>${haberItem.toFixed(2)}<strong></td>
             `;
             tds[i].insertAdjacentElement("afterend",totales);
+            if(debeItem !== haberItem && isAlertado == false){
+              Alert("Advertencia","La partida no esta balanciada, Revise el formulario","warning");
+              isAlertado= true;
+              const [fecha, descripcion] = el1.children;
+              fechaInput.value = fecha.textContent;
+              descripcionInput.value = descripcion.textContent;
+              let diferencia = debeItem - haberItem;
+              if(debeItem < haberItem){
+                tipoInput.value = "DEBE";
+                montoInput.value = Math.abs(diferencia).toFixed(2);
+              }else {
+                tipoInput.value ="HABER" ;
+                montoInput.value = Math.abs(diferencia).toFixed(2);
+              }
+            }
             debeItem = haberItem = 0;
           }
         }
@@ -229,6 +244,21 @@ export const loaderDetallePartida = (url, e) => {
       <td class="haber"><strong>${haberItem.toFixed(2)}<strong></td>
       `;
       tds[(tds.length-1)].insertAdjacentElement("beforebegin",totales);
+      if(debeItem !== haberItem && isAlertado == false){
+        Alert("Advertencia","La partida no esta balanciada, Revise el formulario","warning");
+        isAlertado= true;
+        const [fecha, descripcion] = tds[(tds.length-2)].children;
+        fechaInput.value = fecha.textContent;
+        descripcionInput.value = descripcion.textContent;
+        let diferencia = debeItem - haberItem;
+        if(debeItem < haberItem){
+          tipoInput.value = "DEBE";
+          montoInput.value = Math.abs(diferencia).toFixed(2);
+        }else {
+          tipoInput.value ="HABER" ;
+          montoInput.value = Math.abs(diferencia).toFixed(2);
+        }
+      }
       debeItem = haberItem = 0;
       Array.from(tableBody.children).forEach((newRow,index) => newRow.addEventListener("click", () => selectRow(index)));
     }

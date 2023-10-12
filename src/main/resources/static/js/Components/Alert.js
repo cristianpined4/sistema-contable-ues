@@ -6,7 +6,7 @@ const Alert = (title, text, icon) => {
   });
 };
 
-Alert.confirm = (title, textButton = { si: "", no: "" }, callback, icon) => {
+Alert.confirm = (title, textButton = { si: "Aceptar", no: "Cancelar" }, callback, icon) => {
   return Swal.fire({
     icon,
     title: title,

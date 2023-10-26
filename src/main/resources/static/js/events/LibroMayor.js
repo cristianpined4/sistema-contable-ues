@@ -42,9 +42,12 @@ const render = (data) => {
       <th colspan="2" class="text-center"><strong>${item}</strong></th>
     </tr>`;
     let haber = [],
-      debe = [];
+      debe = [],      
+      rubro = "";
+
     data.forEach((item2) => {
       if (item === `${item2[3]} - ${item2[0]}`) {
+        rubro = item2[4];
         if (item2[1] === "HABER") {
           haber.push(item2[2]);
         } else {
@@ -66,38 +69,55 @@ const render = (data) => {
 
       tr.innerHTML = `
         <td style="width:50%;border-right: 3px solid;">${
-          debe[i] ? debe[i].toFixed(2) : ""
+          debe[i] ? "$"+ debe[i].toFixed(2) : ""
         }</td>
-        <td style="width:50%">${haber[i] ? haber[i].toFixed(2) : ""}</td>
+        <td style="width:50%">${haber[i] ? "$"+ haber[i].toFixed(2) : ""}</td>
       `;
       tbody.appendChild(tr);
     }
-    let tr = document.createElement("tr");
+
+    let tr1 = document.createElement("tr");
+
+    tr1.style.borderTop = "3px solid";
+
+    tr1.innerHTML = `
+      <td style="border-right: 3px solid"><strong>${
+      contadorDebe != 0 ?  "$"+ contadorDebe.toFixed(2) : ""
+    }</strong></td>
+      <td><strong>${
+      contadorHaber != 0 ?  "$"+ contadorHaber.toFixed(2) : ""
+    }</strong></td>
+    `;
+
+
+    let tr = document.createElement("tr"),
+    cuentasDeudoras = ["ACTIVO","EGRESOS"];
+
+   if(cuentasDeudoras.includes(rubro)){
+      contadorDebe = contadorDebe - contadorHaber;
+      contadorHaber = 0;
+   }else {
+    contadorHaber = contadorHaber - contadorDebe;
+    contadorDebe = 0;
+   }
 
     tr.style.borderTop = "3px solid";
 
     tr.innerHTML = `
-      <td style="border-right: 3px solid;${
-        contadorHaber == 0
-          ? "border-bottom:3px solid;border-bottom-style:double;"
-          : ""
-      }"><strong>${
-      contadorDebe > 0 ? contadorDebe.toFixed(2) : ""
+      <td style="border-right: 3px solid"><strong style="${contadorDebe < 0 ? "color:red": ""}">${
+      contadorDebe != 0 ?  "$"+ contadorDebe.toFixed(2) : ""
     }</strong></td>
-      <td style="${
-        contadorDebe == 0
-          ? "border-bottom:3px solid;border-bottom-style:double;"
-          : ""
-      }"><strong>${
-      contadorHaber > 0 ? contadorHaber.toFixed(2) : ""
+      <td><strong style="${contadorHaber < 0 ? "color:red": ""}">${
+      contadorHaber != 0 ?  "$"+ contadorHaber.toFixed(2) : ""
     }</strong></td>
     `;
 
-    if (contadorDebe == contadorHaber) {
+    if (contadorDebe ==  0 && contadorHaber == 0) {
       tr.style.borderBottom = "3px solid";
       tr.style.borderBottomStyle = "double";
     }
 
+    tbody.appendChild(tr1);
     tbody.appendChild(tr);
     table.appendChild(thead);
     table.appendChild(tbody);

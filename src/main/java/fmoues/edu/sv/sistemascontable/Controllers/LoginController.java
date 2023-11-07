@@ -32,4 +32,9 @@ public class LoginController {
         return auth.registro(user);
     }
 
+    @GetMapping("/count")
+    public Object count(){
+        int valor = auth.countUser();
+        return Map.of("success",valor != -1, "data",valor);
+    }
 }

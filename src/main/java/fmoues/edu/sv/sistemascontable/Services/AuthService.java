@@ -56,4 +56,14 @@ public class AuthService {
         }
         return res;
     }
+
+    public Integer countUser(){
+        int res;
+        try {
+            res = users.findAll().size();
+        } catch (Error e) {
+            res = -1;
+        }
+        return res;
+    }
 }

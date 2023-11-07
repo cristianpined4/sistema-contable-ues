@@ -103,14 +103,19 @@ const render = (data) => {
 
     tr.style.borderTop = "3px solid";
 
-    tr.innerHTML = `
-      <td style="border-right: 3px solid"><strong style="${contadorDebe < 0 ? "color:red": ""}">${
-      contadorDebe != 0 ?  "$"+ contadorDebe.toFixed(2) : ""
-    }</strong></td>
-      <td><strong style="${contadorHaber < 0 ? "color:red": ""}">${
-      contadorHaber != 0 ?  "$"+ contadorHaber.toFixed(2) : ""
-    }</strong></td>
-    `;
+    if(cuentasDeudoras.includes(rubro)){
+      tr.innerHTML = `
+        <td colspan="2"><strong style="${contadorDebe < 0 ? "color:red": ""};display:flex;justify-content:space-around">${
+        contadorDebe != 0 ?  "<span>Saldo Deudor:</span> $"+ contadorDebe.toFixed(2) : ""
+      }</strong></td>
+      `;
+    }else {
+      tr.innerHTML = `
+      <td colspan="2"><strong style="${contadorHaber < 0 ? "color:red": ""};display:flex;justify-content:space-around">${
+        contadorHaber != 0 ?  "<span>Saldo Acreedor:</span> $"+ contadorHaber.toFixed(2) : ""
+      }</strong></td>
+      `;
+    }
 
     if (contadorDebe ==  0 && contadorHaber == 0) {
       tr.style.borderBottom = "3px solid";
